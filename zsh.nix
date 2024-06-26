@@ -7,9 +7,8 @@ in {
     programs.zsh = {
       enable = true;
       shellAliases = {
-        ga = "git add";
-        gc = "git commit -m";
-        gp = "git push";
+        ll = "ls -l";
+        lla = "ls -la";
         nixos-update = "sudo nixos-rebuild switch";
       };
       zplug = {
@@ -17,6 +16,8 @@ in {
         plugins = [
           {name = "zsh-users/zsh-autosuggestions";}
           {name = "zsh-users/zsh-syntax-highlighting";}
+          {name = "MichaelAquilina/zsh-you-should-use";}
+          {name = "fdellwing/zsh-bat";}
         ];
       };
       oh-my-zsh = {
