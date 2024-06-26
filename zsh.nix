@@ -17,12 +17,11 @@ in {
         plugins = [
           {name = "zsh-users/zsh-autosuggestions";}
           {name = "zsh-users/zsh-syntax-highlighting";}
+          {
+            name = "romkatv/powerlevel10k";
+            tags = ["as:theme" "depth:1"];
+          }
         ];
-      };
-      oh-my-zsh = {
-        enable = true;
-        plugins = ["git" "thefuck"];
-        theme = "robbyrussell";
       };
     };
   };
