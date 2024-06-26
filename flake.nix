@@ -10,56 +10,59 @@
     nixos-wsl,
     home-manager,
   }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        nixos-wsl.nixosModules.default
-        ./packages.nix
-        ./git.nix
-        home-manager.nixosModules.home-manager
-        ({
-          config,
-          pkgs,
-          ...
-        }: {
-          system.stateVersion = "24.05";
-          wsl.enable = true;
-          nix.extraOptions = "experimental-features = nix-command flakes";
-          wsl.defaultUser = "ivan";
-          #users.nix
-          users.users.ivan = {
-            isNormalUser = true;
-            home = "/home/ivan";
-            description = "Ivan Iablochkin";
-            extraGroups = ["wheel"];
-            group = "ivan"; # Добавляем основную группу
-          };
+    nixosConfigurations.nixos = let
+      localUser = import ./user.nix;
+      localName = localUser.name;
+    in
+      nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          nixos-wsl.nixosModules.default
+          ./packages.nix
+          ./git.nix
+          home-manager.nixosModules.home-manager
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            system.stateVersion = "24.05";
+            wsl.enable = true;
+            nix.extraOptions = "experimental-features = nix-command flakes";
+            wsl.defaultUser = localName;
+            #users.nix
+            users.users.${localName} = {
+              inherit (localUser) home description;
+              isNormalUser = true;
+              extraGroups = ["wheel"];
+              group = localName;
+            };
 
-          users.groups.ivan = {}; # Создаем группу ivan
+            users.groups.${localName} = {};
 
-          #home.nix
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users.ivan.home.stateVersion = "24.05";
-          };
+            #home.nix
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${localName}.home.stateVersion = "24.05";
+            };
 
-          ### КРИНЖ
-          systemd.user.paths."vscode-remote-workaround" = {
-            wantedBy = ["default.target"];
-            pathConfig.PathChanged = "%h/.vscode-server/bin";
-          };
-          systemd.user.services."vscode-remote-workaround" = {
-            script = ''
-              for i in ~/.vscode-server/bin/*; do
-                echo "Fixing vscode-server in $i..."
-                ln -sf ${pkgs.nodejs}/bin/node $i/node
-              done
-            '';
-          };
-          ###
-        })
-      ];
-    };
+            ### КРИНЖ
+            systemd.user.paths."vscode-remote-workaround" = {
+              wantedBy = ["default.target"];
+              pathConfig.PathChanged = "%h/.vscode-server/bin";
+            };
+            systemd.user.services."vscode-remote-workaround" = {
+              script = ''
+                for i in ~/.vscode-server/bin/*; do
+                  echo "Fixing vscode-server in $i..."
+                  ln -sf ${pkgs.nodejs}/bin/node $i/node
+                done
+              '';
+            };
+            ###
+          })
+        ];
+      };
   };
 }
