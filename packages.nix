@@ -9,5 +9,6 @@ in
       alejandra
       vim
       jq
+      thefuck
     ];
   }

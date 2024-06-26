@@ -20,6 +20,7 @@
           nixos-wsl.nixosModules.default
           ./packages.nix
           ./git.nix
+          ./zsh.nix
           home-manager.nixosModules.home-manager
           ({
             config,
@@ -30,11 +31,11 @@
             wsl.enable = true;
             nix.extraOptions = "experimental-features = nix-command flakes";
             wsl.defaultUser = localName;
-            #users.nix
+            users.defaultUserShell = pkgs.zsh;
             users.users.${localName} = {
               inherit (localUser) home description;
               isNormalUser = true;
-              extraGroups = ["wheel"];
+              extraGroups = ["wheel" "docker"];
               group = localName;
             };
 
