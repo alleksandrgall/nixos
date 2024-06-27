@@ -32,6 +32,7 @@
             nix.extraOptions = "experimental-features = nix-command flakes";
             nix.trustedUsers = ["root" "${localName}"];
             wsl.defaultUser = localName;
+            wsl.nativeSystemd = true;
             users.defaultUserShell = pkgs.zsh;
             users.users.${localName} = {
               inherit (localUser) home description;
