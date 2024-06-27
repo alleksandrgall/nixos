@@ -10,5 +10,6 @@ in
       vim
       jq
       direnv
+      htop
     ];
   }

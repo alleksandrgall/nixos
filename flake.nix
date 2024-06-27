@@ -30,6 +30,7 @@
             system.stateVersion = "24.05";
             wsl.enable = true;
             nix.extraOptions = "experimental-features = nix-command flakes";
+            nix.trustedUsers = ["root" "${localName}"];
             wsl.defaultUser = localName;
             users.defaultUserShell = pkgs.zsh;
             users.users.${localName} = {
