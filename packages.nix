@@ -9,6 +9,6 @@ in
       alejandra
       vim
       jq
-      thefuck
+      direnv
     ];
   }
