@@ -32,6 +32,7 @@
           }: {
             system.stateVersion = "24.05";
             wsl.enable = true;
+            environment.variables.EDITOR = "neovim";
             programs.nix-ld.enable = true;
             services.vscode-server.enable = true;
             nix.extraOptions = "experimental-features = nix-command flakes";

@@ -8,7 +8,7 @@ in
         wget
         nil
         alejandra
-        vim
+        neovim
         jq
         direnv
         htop
