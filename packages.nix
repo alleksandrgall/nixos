@@ -8,7 +8,6 @@ in
         wget
         nil
         alejandra
-        neovim
         sops
         jq
         postgresql_16
