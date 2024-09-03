@@ -9,13 +9,18 @@ in
         nil
         alejandra
         neovim
+        sops
         jq
+        postgresql_16
         direnv
         htop
       ];
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;
+      };
+      programs.neovim = {
+        enable = true;
       };
     };
   }

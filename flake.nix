@@ -2,14 +2,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    
   };
 
   outputs = {
     self,
     nixpkgs,
     nixos-wsl,
-    vscode-server,
     home-manager,
   }: {
     nixosConfigurations.nixos = let
@@ -20,7 +19,6 @@
         system = "x86_64-linux";
         modules = [
           nixos-wsl.nixosModules.default
-          vscode-server.nixosModules.default
           ./packages.nix
           ./git.nix
           ./zsh.nix
@@ -33,8 +31,70 @@
             system.stateVersion = "24.05";
             wsl.enable = true;
             environment.variables.EDITOR = "neovim";
-            programs.nix-ld.enable = true;
-            services.vscode-server.enable = true;
+            programs.nix-ld = {
+    enable = true;
+    package = pkgs.nix-ld-rs;
+    # https://github.com/Mic92/dotfiles/blob/main/nixos/modules/nix-ld.nix
+    libraries = with pkgs;
+      [
+        # Mic92's list
+        alsa-lib
+        at-spi2-atk
+        at-spi2-core
+        atk
+        cairo
+        cups
+        curl
+        dbus
+        expat
+        fontconfig
+        freetype
+        fuse3
+        gdk-pixbuf
+        glib
+        gtk3
+        icu
+        libGL
+        libappindicator-gtk3
+        libdrm
+        libglvnd
+        libnotify
+        libpulseaudio
+        libunwind
+        libusb1
+        libuuid
+        libxkbcommon
+        mesa #non-noveau NVidia doesn't use mesa (???)
+        nspr
+        nss
+        openssl
+        pango
+        pipewire
+        stdenv.cc.cc
+        systemd
+        vulkan-loader
+        xorg.libX11
+        xorg.libXScrnSaver
+        xorg.libXcomposite
+        xorg.libXcursor
+        xorg.libXdamage
+        xorg.libXext
+        xorg.libXfixes
+        xorg.libXi
+        xorg.libXrandr
+        xorg.libXrender
+        xorg.libXtst
+        xorg.libxcb
+        xorg.libxkbfile
+        xorg.libxshmfence
+        zlib
+      ]
+      ++ [
+        # Diamondy4's list
+        gsettings-desktop-schemas
+      ];
+  };
+
             nix.extraOptions = "experimental-features = nix-command flakes";
             nix.trustedUsers = ["root" "${localName}"];
             wsl.defaultUser = localName;
