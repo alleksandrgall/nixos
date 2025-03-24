@@ -98,6 +98,8 @@
             nix.settings.trusted-users = ["root" "${localName}"];
             wsl.defaultUser = localName;
             wsl.nativeSystemd = true;
+            wsl.wslConf.network.generateResolvConf = false;
+            networking.nameservers = ["1.1.1.1"];
             users.defaultUserShell = pkgs.zsh;
             users.users.${localName} = {
               inherit (localUser) home description;
