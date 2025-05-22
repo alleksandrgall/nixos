@@ -4,9 +4,16 @@ let
 in
   {pkgs, ...}: {
     home-manager.users.${localName} = {
+      programs.starship = {
+        enable = true;
+        enableTransience = true;
+      };
+      programs.fzf.enable = true;
       home.packages = with pkgs; [
         wget
         nil
+        nix-output-monitor
+        nvd
         alejandra
         sops
         jq

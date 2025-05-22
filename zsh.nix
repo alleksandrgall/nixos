@@ -1,18 +1,18 @@
 {pkgs, ...}: let
   localUser = import ./user.nix;
 in {
-  programs.zsh.enable = true;
+  programs.zsh.enable = false;
   users.users.${localUser.name}.shell = pkgs.zsh;
   home-manager.users.${localUser.name} = {
     programs.zsh = {
-      enable = true;
+      enable = false;
       shellAliases = {
         ll = "ls -l";
         lla = "ls -la";
         nixos-update = "sudo nixos-rebuild switch";
       };
       zplug = {
-        enable = true;
+        enable = false;
         plugins = [
           {name = "zsh-users/zsh-autosuggestions";}
           {name = "zsh-users/zsh-syntax-highlighting";}

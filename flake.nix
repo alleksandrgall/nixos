@@ -2,6 +2,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    # Более быстрые патчи никса
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   };
 
   outputs = {
@@ -9,6 +11,8 @@
     nixpkgs,
     nixos-wsl,
     home-manager,
+    determinate,
+    ...
   }: {
     nixosConfigurations.nixos = let
       localUser = import ./user.nix;
@@ -17,10 +21,12 @@
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          determinate.nixosModules.default
           nixos-wsl.nixosModules.default
           ./packages.nix
           ./git.nix
-          ./zsh.nix
+          # ./zsh.nix
+          ./fish.nix
           home-manager.nixosModules.home-manager
           ({
             config,
@@ -29,7 +35,23 @@
           }: {
             system.stateVersion = "24.05";
             wsl.enable = true;
-            environment.variables.EDITOR = "nvim";
+            environment.sessionVariables = {
+              NH_FLAKE = "/home/ivan/nixos";
+              FLAKE = "/home/ivan/nixos";
+            };
+            environment.variables = {
+              EDITOR = "nvim";
+              FLAKE = "/home/ivan/nixos";
+              NH_FLAKE = "/home/ivan/nixos";
+            };
+            # Автоматически делает свитч, удаляет всё что старше 30 дней не трогалось, сохраняет 5 последних свитчей
+            programs.nh = {
+              enable = true;
+              clean = {
+                enable = true;
+                extraArgs = "--keep-since 30d --keep 5";
+              };
+            };
             programs.nix-ld = {
               enable = true;
               package = pkgs.nix-ld-rs;
@@ -96,11 +118,31 @@
 
             nix.extraOptions = "experimental-features = nix-command flakes";
             nix.settings.trusted-users = ["root" "${localName}"];
+            nix.settings.lazy-trees = true;
+            nix.settings = {
+              extra-substituters = [
+                "https://cache.nixos.org/"
+                "https://nix-community.cachix.org"
+                "https://numtide.cachix.org"
+                "https://cuda-maintainers.cachix.org"
+              ];
+              extra-trusted-substituters = [
+                "https://cache.nixos.org/"
+                "https://nix-community.cachix.org"
+                "https://numtide.cachix.org"
+                "https://cuda-maintainers.cachix.org"
+              ];
+              extra-trusted-public-keys = [
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+                "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+                "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+                "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+              ];
+            };
             wsl.defaultUser = localName;
-            wsl.nativeSystemd = true;
             wsl.wslConf.network.generateResolvConf = false;
             networking.nameservers = ["1.1.1.1"];
-            users.defaultUserShell = pkgs.zsh;
+            users.defaultUserShell = pkgs.fish;
             users.users.${localName} = {
               inherit (localUser) home description;
               isNormalUser = true;
