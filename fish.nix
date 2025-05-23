@@ -14,6 +14,12 @@ in {
         #sr = "kitty +kitten ssh root@";
         ll = "ls -l";
         lla = "ls -la";
+        ga = "git add";
+        gc = "git commit";
+        gcm = "git commit -m";
+        gp = "git push";
+        gl = "git pull";
+        gco = "git checkout";
         nixos-update = "sudo nixos-rebuild switch";
       };
     };
