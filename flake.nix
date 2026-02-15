@@ -11,7 +11,7 @@
     nixpkgs,
     nixos-wsl,
     home-manager,
-    determinate,
+    # determinate,
     ...
   }: {
     nixosConfigurations.nixos = let
@@ -21,7 +21,7 @@
       nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          determinate.nixosModules.default
+          # determinate.nixosModules.default
           nixos-wsl.nixosModules.default
           ./packages.nix
           ./git.nix
@@ -39,6 +39,7 @@
               NH_FLAKE = "/home/ivan/nixos";
               FLAKE = "/home/ivan/nixos";
             };
+            environment.etc."nix/nix.conf".target = "nix/nix.custom.conf";
             environment.variables = {
               EDITOR = "nvim";
               FLAKE = "/home/ivan/nixos";
@@ -117,8 +118,8 @@
             };
 
             nix.extraOptions = "experimental-features = nix-command flakes";
-            nix.settings.trusted-users = ["root" "${localName}"];
-            nix.settings.lazy-trees = true;
+            nix.settings.trusted-users = ["root" "@wheel" "@sudo" "${localName}"];
+            # nix.settings.lazy-trees = true;
             nix.settings = {
               extra-substituters = [
                 "https://cache.nixos.org/"

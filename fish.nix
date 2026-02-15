@@ -7,6 +7,13 @@ in {
   };
   users.users.${localUser.name}.shell = pkgs.fish;
   home-manager.users.${localUser.name} = {
+    programs.tmux = {
+      enable = true;
+      clock24 = true;
+      newSession = true;
+      secureSocket = false;
+      shell = "${pkgs.fish}/bin/fish";
+    };
     programs.fish = {
       enable = true;
       shellAbbrs = {
