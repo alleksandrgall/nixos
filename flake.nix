@@ -55,7 +55,7 @@
             };
             programs.nix-ld = {
               enable = true;
-              package = pkgs.nix-ld-rs;
+              package = pkgs.nix-ld;
               # https://github.com/Mic92/dotfiles/blob/main/nixos/modules/nix-ld.nix
               libraries = with pkgs;
                 [
