@@ -136,6 +136,12 @@
                   ];
 
                 # nix.extraOptions = "experimental-features = nix-command flakes";
+                nix.gc = {
+                  automatic = true;
+                  dates = "weekly";
+                  options = "--delete-older-than 14d";
+                };
+                nix.settings.auto-optimise-store = true;
                 nix.settings.experimental-features = [
                   "nix-command"
                   "flakes"
@@ -181,6 +187,12 @@
                 wsl.defaultUser = localName;
                 wsl.wslConf.network.generateResolvConf = false;
                 networking.nameservers = [ "1.1.1.1" ];
+                boot.kernel.sysctl = {
+                  "vm.min_free_kbytes" = 262144; # 256MB резерв high-order под vmbus_alloc_ring
+                  "vm.compaction_proactiveness" = 40; # default 20 — активнее уплотняет фрагментацию
+                  "vm.watermark_scale_factor" = 200; # kswapd раньше просыпается
+                  "fs.inotify.max_user_watches" = 524288; # бонусом, на случай ENOSPC в exthost
+                };
                 users.defaultUserShell = pkgs.fish;
                 users.users.${localName} = {
                   inherit (localUser) home description;

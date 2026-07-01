@@ -19,6 +19,11 @@ in
       sops
       jq
       postgresql_16
+      sox
+      rclone
+      elinks
+      age
+      grpcurl
       direnv
       htop
       claude-code
