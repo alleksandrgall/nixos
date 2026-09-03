@@ -34,6 +34,7 @@
             nixos-wsl.nixosModules.default
             ./packages.nix
             ./git.nix
+            ./claude.nix
             # ./zsh.nix
             ./fish.nix
             home-manager.nixosModules.home-manager
@@ -186,6 +187,7 @@
                 };
                 wsl.defaultUser = localName;
                 wsl.wslConf.network.generateResolvConf = false;
+                virtualisation.docker.enable = true;
                 networking.nameservers = [ "1.1.1.1" ];
                 boot.kernel.sysctl = {
                   "vm.min_free_kbytes" = 262144; # 256MB резерв high-order под vmbus_alloc_ring

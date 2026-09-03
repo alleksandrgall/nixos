@@ -16,10 +16,12 @@ in
       nix-output-monitor
       nvd
       nixfmt
+      nodejs
       sops
       jq
       postgresql_16
       sox
+      dig
       rclone
       elinks
       age
