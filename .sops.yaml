@@ -1,0 +1,7 @@
+keys:
+  - &ivan age1u4g8umty3a4x9p0vcwt84wjj0jm6qxdup8kdw3fksjml3q9c3g5q0uy7jt
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *ivan

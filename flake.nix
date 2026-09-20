@@ -8,10 +8,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     claude-code.url = "github:sadjow/claude-code-nix";
+    serena.url = "github:oraios/serena";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    {
+    inputs@{
       self,
       nixpkgs,
       nixos-wsl,
@@ -29,12 +34,15 @@
         in
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
           modules = [
             determinate.nixosModules.default
+            inputs.sops-nix.nixosModules.sops
             nixos-wsl.nixosModules.default
             ./packages.nix
             ./git.nix
             ./claude.nix
+            ./mcp.nix
             # ./zsh.nix
             ./fish.nix
             home-manager.nixosModules.home-manager

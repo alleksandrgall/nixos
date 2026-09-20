@@ -28,7 +28,6 @@ in
       grpcurl
       direnv
       htop
-      claude-code
     ];
     programs.direnv = {
       enable = true;
