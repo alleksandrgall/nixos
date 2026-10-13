@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     opencode-flake = {
-      url = "github:anomalyco/opencode";
+      url = "github:anomalyco/opencode/v1.19.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

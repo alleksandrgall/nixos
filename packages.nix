@@ -5,9 +5,10 @@ in
 { pkgs, inputs, ... }:
 {
   home-manager.users.${localName} = {
-    xdg.configFile."opencode/opencode.json".source =
-      ./opencode/opencode.json;
-
+    xdg.configFile = 
+      { "opencode/opencode.json".source = ./opencode/opencode.json;
+        "opencode/AGENTS.md".source = ./opencode/AGENTS.md;
+      };
     programs.starship = {
       enable = true;
       enableTransience = true;
