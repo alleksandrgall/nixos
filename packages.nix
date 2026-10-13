@@ -2,7 +2,7 @@ let
   localUser = import ./user.nix;
   localName = localUser.name;
 in
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home-manager.users.${localName} = {
     programs.starship = {
@@ -20,6 +20,7 @@ in
       sops
       jq
       postgresql_16
+      inputs.opencode-flake.packages.${pkgs.system}.default
       sox
       dig
       rclone

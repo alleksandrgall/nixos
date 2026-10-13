@@ -17,4 +17,7 @@ in
   "mist" = getshop;
   "mist-wip" = getshop;
   "lynx" = getshop;
+
+  "enigma" = [ "grafana" ];
+  "enigma-master" = [ "grafana" ];
 }
