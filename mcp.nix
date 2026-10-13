@@ -1,4 +1,4 @@
-# MCP-серверы для Claude Code, по проектам из ./mcp/projects.nix.
+# MCP-серверы для Claude Code и OpenCode, по проектам из ./mcp/projects.nix.
 #
 # В репозитории проекта не создаётся ничего: конфиг лежит в сторе, а обёртка
 # над claude подставляет нужный по корню git-репозитория. Причина — .mcp.json
@@ -22,13 +22,30 @@ let
   mkMcpJson =
     dir: names:
     pkgs.writeText "mcp-${builtins.replaceStrings [ "/" ] [ "-" ] dir}.json" (
-      builtins.toJSON { mcpServers = lib.getAttrs names (mkServers (projectDir dir)); }
+      builtins.toJSON { mcpServers = lib.getAttrs names (mkServers (projectDir dir) "claude-code"); }
+    );
+
+  mkOpenCodeJson =
+    dir: names:
+    pkgs.writeText "opencode-mcp-${builtins.replaceStrings [ "/" ] [ "-" ] dir}.json" (
+      builtins.toJSON {
+        mcp = lib.mapAttrs (_: server: {
+          type = "local";
+          command = [ server.command ] ++ (server.args or [ ]);
+        }) (lib.getAttrs names (mkServers (projectDir dir) "ide"));
+      }
     );
 
   # Сопоставление корня репозитория с его конфигом.
   dispatch = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
       dir: names: ''    ${lib.escapeShellArg (projectDir dir)}) cfg=${mkMcpJson dir names} ;;''
+    ) projects
+  );
+
+  openCodeDispatch = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
+      dir: names: ''    ${lib.escapeShellArg (projectDir dir)}) cfg=${mkOpenCodeJson dir names} ;;''
     ) projects
   );
 
@@ -52,6 +69,27 @@ let
       exec ${pkgs.claude-code}/bin/claude "$@"
     '';
   };
+
+  opencode-wrapped = pkgs.writeShellApplication {
+    name = "opencode";
+    runtimeInputs = [ pkgs.git ];
+    text = ''
+      root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+      [[ -n "$root" ]] || root="$PWD"
+
+      cfg=""
+      case "$root" in
+      ${openCodeDispatch}
+      esac
+
+      if [[ -n "$cfg" ]]; then
+        export OPENCODE_CONFIG="$cfg"
+      fi
+
+      export OPENCODE_EXPERIMENTAL_LSP_TOOL=true
+      exec ${inputs.opencode-flake.packages.${pkgs.system}.default}/bin/opencode "$@"
+    '';
+  };
 in
 {
   sops.defaultSopsFile = ./secrets/secrets.yaml;
@@ -68,5 +106,5 @@ in
     mode = "0400";
   });
 
-  home-manager.users.${localName}.home.packages = [ claude-wrapped ];
+  home-manager.users.${localName}.home.packages = [ claude-wrapped opencode-wrapped ];
 }

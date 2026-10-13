@@ -2,7 +2,7 @@ let
   localUser = import ./user.nix;
   localName = localUser.name;
 in
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
   home-manager.users.${localName} = {
     xdg.configFile = 
@@ -24,7 +24,6 @@ in
       sops
       jq
       postgresql_16
-      inputs.opencode-flake.packages.${pkgs.system}.default
       sox
       dig
       rclone
