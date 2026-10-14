@@ -8,6 +8,10 @@ in
     xdg.configFile = 
       { "opencode/opencode.json".source = ./opencode/opencode.json;
         "opencode/AGENTS.md".source = ./opencode/AGENTS.md;
+        "opencode/agents" = {
+          source = ./opencode/agents;
+          recursive = true;
+        };
       };
     programs.starship = {
       enable = true;
