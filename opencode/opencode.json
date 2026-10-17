@@ -3,6 +3,9 @@
   "model": "anthropic/claude-opus-5-5",
   "small_model": "deepseek/deepseek-chat",
   "lsp": true,
+  "instructions": [
+    "~/.local/share/opencode/memory/learned.md"
+  ],
   "permission": {
     "*": "ask",
     "read": "allow",
@@ -14,7 +17,10 @@
     "todowrite": "allow",
     "todoread": "allow",
     "bash": "ask",
-    "external_directory": "ask"
+    "external_directory": {
+      "*": "ask",
+      "~/.local/share/opencode/memory/**": "allow"
+    }
   },
   "agent": {
     "build": {

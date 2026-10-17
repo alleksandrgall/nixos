@@ -42,9 +42,14 @@ If the language server cannot give you diagnostics at all — not installed, won
 
 The one exception is a dispatch that explicitly names a command for you to run. Run exactly that, exactly as many times as it says. If it names none, you need none.
 
+In case of problems with HLS
+- Stage new files if LSP complains that they are not visable - Nix doesn't see them
+unless they are staged
+- If you didn't manage to fix LSP - resort to cabal build. Just include in the report that you did it
+
 ## Do not
 
-- **Do not commit, stage, stash, or touch git history.** Leave your work in the working tree; the controller reviews and commits. This holds even if a plan or brief tells you to commit.
+- **Do not commit, stash, or touch git history.** Leave your work in the working tree; the controller reviews and commits. This holds even if a plan or brief tells you to commit. You can only stage for nix to see.
 - Do not run formatters.
 - Do not read files the brief didn't point you at unless you need them to finish — reading "to get oriented" is how a task burns its budget.
 
